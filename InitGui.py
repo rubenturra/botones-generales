@@ -50,3 +50,9 @@ try:
                        ["BotonesGenerales_Cantidad", "BotonesGenerales_Ir1stNesting"])
 except Exception as _e:
     App.Console.PrintWarning("Botones generales: no se pudo crear la barra (%s)\n" % _e)
+
+try:
+    import BotonesGenerales_Gui
+    BotonesGenerales_Gui.watch_workbenches()
+except Exception as _e:
+    App.Console.PrintWarning("Botones generales: %s\n" % _e)
