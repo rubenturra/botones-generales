@@ -146,7 +146,7 @@ def _after_nesting():
         new_docs = [App.getDocument(n) for n in App.listDocuments()
                     if n not in _state["before"] and n.startswith("Nesting_Result")]
         nest_secs = time.time() - _state["t0"]
-        intro = "ANIDADO (%.0f s)\n%s" % (nest_secs, "\n".join(summary) if summary else
+        intro = "ANIDADO (%.0f s)\n%s" % (nest_secs, "\n\n".join(summary) if summary else
                                           "\n".join("  " + d.Label for d in new_docs))
         if not new_docs:
             _warn("El anidado no ha creado ningún resultado (¿se ha cancelado?). No se mecaniza nada.")
@@ -160,7 +160,7 @@ def _after_nesting():
         Gui.activateWorkbench("CAMWorkbench")
         import BotonesPlasma_Mecanizar as M
         M.activate_doc(new_docs[0])
-        M.main(auto_docs=new_docs, intro=intro + "\n\nMECANIZADO PLASMA")
+        M.main(auto_docs=new_docs, intro=intro + "\n\nMECANIZADO PLASMA", started=_state["t0"])
     except Exception as e:
         _warn("No se ha podido completar: %s" % e)
     finally:
