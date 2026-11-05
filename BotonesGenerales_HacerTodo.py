@@ -73,7 +73,9 @@ def run():
     if missing:
         _warn("Falta instalar: %s" % ", ".join(missing))
         return
-    selection = [o for o in Gui.Selection.getSelection() if hasattr(o, "Shape")]
+    # Selection of EVERY open document ("*"): getSelection() alone only returns
+    # the active document's, so parts selected in another document were lost.
+    selection = [o for o in Gui.Selection.getSelection("*") if hasattr(o, "Shape")]
     _state.clear()
     _state.update(busy=True, t0=time.time(), before=set(App.listDocuments()))
     try:
@@ -99,14 +101,21 @@ def run():
                     panel.table.selectRow(r)
                 panel.table.setSelectionMode(mode)
                 panel.remove_selected_rows()
-            # 1st Nesting adds the selection of the ACTIVE document: go back to
-            # the design document (opening the panel activated the preview).
-            source = selection[0].Document
-            _activate(source)
+            # 1st Nesting adds the selection of the ACTIVE document: add the parts
+            # document by document (opening the panel activated the preview).
+            by_doc = {}
+            for o in selection:
+                by_doc.setdefault(o.Document.Name, []).append(o)
+            for objs in by_doc.values():
+                _activate(objs[0].Document)
+                Gui.Selection.clearSelection()
+                for o in objs:
+                    Gui.Selection.addSelection(o.Document.Name, o.Name)
+                panel.add_selected_objects()
+            # leave the user's selection as it was
             Gui.Selection.clearSelection()
             for o in selection:
                 Gui.Selection.addSelection(o.Document.Name, o.Name)
-            panel.add_selected_objects()
         else:
             _wait(lambda: _rows(panel) > 0, 3)     # the list of last time is restored
         if not _rows(panel):
