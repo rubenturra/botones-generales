@@ -40,6 +40,19 @@ def _wait(condition, seconds):
     return condition()
 
 
+def _activate(doc):
+    App.setActiveDocument(doc.Name)
+    try:
+        mdi = Gui.getMainWindow().findChild(QtWidgets.QMdiArea)
+        for sub in mdi.subWindowList():
+            if sub.windowTitle().split(" : ")[0] == doc.Label:
+                mdi.setActiveSubWindow(sub)
+                break
+    except Exception:
+        pass
+    QtWidgets.QApplication.processEvents()
+
+
 def _warn(text):
     QtWidgets.QMessageBox.warning(Gui.getMainWindow(), TITLE, text)
 
@@ -86,6 +99,10 @@ def run():
                     panel.table.selectRow(r)
                 panel.table.setSelectionMode(mode)
                 panel.remove_selected_rows()
+            # 1st Nesting adds the selection of the ACTIVE document: go back to
+            # the design document (opening the panel activated the preview).
+            source = selection[0].Document
+            _activate(source)
             Gui.Selection.clearSelection()
             for o in selection:
                 Gui.Selection.addSelection(o.Document.Name, o.Name)
