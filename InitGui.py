@@ -40,14 +40,34 @@ class _Ir1stNesting:
         return "Nesting1stWorkbench" in FreeCADGui.listWorkbenches()
 
 
+class _HacerTodo:
+    def GetResources(self):
+        import os, BotonesGenerales_Cantidad
+        icon = os.path.join(os.path.dirname(BotonesGenerales_Cantidad.__file__), "icons", "hacer_todo.svg")
+        return {"Pixmap": icon,
+                "MenuText": "Hacer todo",
+                "ToolTip": "Anidar con 1st Nesting y mecanizar plasma con la configuración de la última vez, "
+                           "sin ventanas intermedias.\nPiezas: las seleccionadas o, si no hay, las de la última vez."}
+
+    def Activated(self):
+        import BotonesGenerales_HacerTodo
+        BotonesGenerales_HacerTodo.run()
+
+    def IsActive(self):
+        import FreeCADGui
+        return "Nesting1stWorkbench" in FreeCADGui.listWorkbenches()
+
+
 Gui.addCommand("BotonesGenerales_Cantidad", _CantidadPiezas())
+Gui.addCommand("BotonesGenerales_HacerTodo", _HacerTodo())
 Gui.addCommand("BotonesGenerales_Ir1stNesting", _Ir1stNesting())
 
 try:
     from BotonesToolbar_Generales import ensure_toolbar
     for _wb in ("PartDesignWorkbench", "PartWorkbench"):
         ensure_toolbar(_wb, "Custom_BotonesGenerales", "Fabricación",
-                       ["BotonesGenerales_Cantidad", "BotonesGenerales_Ir1stNesting"])
+                       ["BotonesGenerales_Cantidad", "BotonesGenerales_Ir1stNesting",
+                        "BotonesGenerales_HacerTodo"])
 except Exception as _e:
     App.Console.PrintWarning("Botones generales: no se pudo crear la barra (%s)\n" % _e)
 

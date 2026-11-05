@@ -20,3 +20,17 @@ lee esa cantidad al añadir la pieza y la actualiza si la cambias en su tabla.
 
 La barra se crea una sola vez; si la quitas en *Herramientas → Personalizar*,
 no vuelve a aparecer.
+
+## Hacer todo
+
+Botón en la barra **Fabricación** (Part Design y Part), al lado de *Ir a 1st Nesting*.
+Hace el anidado con 1st Nesting y el mecanizado de plasma con la configuración de la
+última vez, sin ventanas intermedias:
+
+1. piezas: las seleccionadas; si no hay selección, la lista de la última vez;
+2. chapas, espesores y ajustes: los guardados en 1st Nesting;
+3. mecaniza solo los anidados nuevos con las opciones guardadas de *Mecanizar plasma*
+   (carpeta, nombre, herramienta, entradas/salidas, retal, simulación);
+4. al final, un único resumen con el anidado y el mecanizado.
+
+Necesita 1st Nesting, el banco CAM y *Botones plasma*.
